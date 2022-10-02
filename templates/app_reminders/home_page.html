@@ -1,0 +1,14 @@
+{% extends 'app_reminders/base.html' %}
+
+
+{% block title %}Название страницы{% endblock %}
+
+{% block content %}
+    <div>
+    {% for task in tasks %}
+        <p>{{ task.task_text }} - {{ task.deadline }}</p>
+    {% endfor %}
+    </div>
+
+{% endblock %}
+
