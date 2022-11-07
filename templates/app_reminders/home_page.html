@@ -1,4 +1,4 @@
-{% extends 'app_reminders/base.html' %}
+{% extends 'app_reminders/base_header_tollbar.html' %}
 
 
 {% block title %}Название страницы{% endblock %}
@@ -6,7 +6,11 @@
 {% block content %}
     <div>
     {% for task in tasks %}
-        <p>{{ task.task_text }} - {{ task.deadline }} </p>
+        {% if task.status == False %}
+            <p>{{ task.task_text }} - {{ task.deadline }}</p>
+        {% else %}
+            <p style="text-decoration: line-through">{{ task.task_text }} - {{ task.deadline }}</p>
+        {% endif %}
     {% endfor %}
     </div>
 

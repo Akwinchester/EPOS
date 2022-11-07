@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link type="text/css" href="{% static 'app_reminders/css/styles.css' %}" rel="stylesheet" />
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+<div class="header group">
+    {% if request.user.is_authenticated %}
+        <a class="button_for_header" href="{% url 'Logout_user' %}">выйти</a>
+        <a class="button_for_header" href="#">профиль {{ request.user }}</a>
+    {% else %}
+        <a class="button_for_header" href="{% url 'Login_user' %}">войти</a>
+        <a class="button_for_header" href="{% url 'Add_user' %}">Регистрация</a>
+    {% endif %}
+    {% block header %}{% endblock %}
+</div>
+<div name="container group">
+        <div class="toolbar">
+            {% block toolbar %}
+            {% endblock %}
+        </div>
+        <div class="content_container">
+            {% block content %}
+
+            {% endblock %}
+        </div>
+    </div>
+
+</body>
+</html>
