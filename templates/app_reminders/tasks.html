@@ -1,0 +1,46 @@
+{% extends 'app_reminders/index.html' %}
+
+{% block contetnt %}
+            {% for task in tasks %}
+                <div class="task_container">
+                    {% if task.status == False %}
+                        <p class="task">{{ task.task_text }} - {{ task.deadline }}</p>
+                    {% else %}
+                        <p style="text-decoration: line-through" class="task">{{ task.task_text }} - {{ task.deadline }}</p>
+                    {% endif %}
+                    <div class="task_status"></div>
+                </div>
+        {% endfor %}
+
+    <script>
+    const requestURL = 'http://127.0.0.1:8000/app_reminders/post/'
+    function sendRequest(method, url, body = null)
+    {
+        return new Promise((resolve, reject)=> {
+            const xhr = new XMLHttpRequest()
+            xhr.open(method, url, true)
+            xhr.responseType = 'Json'
+
+            xhr.onload = () => {
+                if (xhr.status >= 400){
+                    reject(xhr.response)
+                } else {
+                    resolve(xhr.response)
+                }
+            }
+            xhr.onerror = () => {
+                reject(xhr.response)
+            }
+
+            xhr.send(JSON.stringify(body))
+        })
+    }
+    const body = {
+        "name":"arsen",
+        "age":"19"
+    }
+
+    sendRequest('POST', requestURL, body).then(data => console.log(data))
+</script>
+
+{% endblock %}

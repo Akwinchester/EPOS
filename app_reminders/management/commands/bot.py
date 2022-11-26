@@ -26,6 +26,7 @@ class Command(BaseCommand):
         bot = Bot(token=TOKEN)
         updater = Updater(bot=bot)
         start_handler = CommandHandler('start', start)
+        information_handler = CommandHandler('information', start)
         add_task_handler = ConversationHandler(
 
             entry_points=[CommandHandler('add_task', start_add_task)],
@@ -40,6 +41,7 @@ class Command(BaseCommand):
         button_handler = CallbackQueryHandler(button)
 
         updater.dispatcher.add_handler(start_handler)
+        updater.dispatcher.add_handler(information_handler)
         updater.dispatcher.add_handler(add_task_handler)
         updater.dispatcher.add_handler(button_handler)
         updater.dispatcher.add_handler(unknown_handler)

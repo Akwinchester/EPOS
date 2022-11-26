@@ -5,6 +5,7 @@
 
 {% block content %}
     <div>
+    <p>{{ x }}</p>
     {% for task in tasks %}
         {% if task.status == False %}
             <p>{{ task.task_text }} - {{ task.deadline }}</p>
@@ -13,6 +14,59 @@
         {% endif %}
     {% endfor %}
     </div>
+{#    <script>#}
+{#    const requestURL = 'http://127.0.0.1:8000/app_reminders/post/'#}
+{#    function sendRequest(method, url, body = null)#}
+{#    {#}
+{#        return new Promise((resolve, reject)=> {#}
+{#            const xhr = new XMLHttpRequest()#}
+{#            xhr.open(method, url, true)#}
+{#            xhr.responseType = 'Json'#}
+{##}
+{#            xhr.onload = () => {#}
+{#                if (xhr.status >= 400){#}
+{#                    reject(xhr.response)#}
+{#                } else {#}
+{#                    resolve(xhr.response)#}
+{#                }#}
+{#            }#}
+{#            xhr.onerror = () => {#}
+{#                reject(xhr.response)#}
+{#            }#}
+{##}
+{#            xhr.send(JSON.stringify(body))#}
+{#        })#}
+{#    }#}
+{#    const body = {#}
+{#        "name":"arsen",#}
+{#        "age":"19"#}
+{#    }#}
+{##}
+{#    sendRequest('POST', requestURL, body).then(data => console.log(data))#}
+{#</script>#}
+
+
+{#    <script>#}
+{#    let data = {name: 'arsen'}#}
+{#    fetch('http://127.0.0.1:8000/app_reminders/home_page/',{#}
+{#        method: 'POST',#}
+{#        headers: {'Content-Type': 'application/json'},#}
+{#        body: JSON.stringify(data)#}
+{##}
+{##}
+{#    });#}
+{#    </script>#}
+
+
+{#    <script>#}
+{#    let age = 19#}
+{#    let data = 'name=arsen&age=' + age + '&role=student'#}
+{#    fetch('http://127.0.0.1:8000/app_reminders/post/',{#}
+{#        method: 'POST',#}
+{#        headers: {'Content-Type': 'application/x-www-form-urlencoded'},#}
+{#        body: data#}
+{#    });#}
+{#    </script>#}
 
 {% endblock %}
 

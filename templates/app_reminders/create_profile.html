@@ -1,0 +1,20 @@
+{% extends 'app_reminders/base_header_tollbar.html' %}
+{% block title %} Создание профиля{% endblock %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+        <div class="card-body"></div>
+        <form method="POST" action="" enctype="multipart/form-data"></form>
+        {% csrf_token %}
+        <div >{{ form.non_field_errors }}</div>
+            {% for f in form %}
+                <p class="form"><label for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
+                <div >{{ f.errors }}</div>
+            {% endfor %}
+            <button class="button_for_header" type="submit">Вход</button>
+        </form>
+    </div>
+    {% else %}
+    <a href="{% url 'Login_user' %}">Login</a>
+    {% endif %}
+{% endblock %}
