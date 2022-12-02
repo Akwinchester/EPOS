@@ -3,6 +3,7 @@ import datetime
 from django.contrib.auth.models import User
 
 class tasks(models.Model):
+    id_time = models.IntegerField(default=0)
     task_text = models.CharField(max_length=150, default='', verbose_name='текст задачи')
     deadline = models.DateTimeField(verbose_name='дедлайн', default=datetime.datetime.now())
     task_description = models.TextField(default='')

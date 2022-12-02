@@ -1,0 +1,207 @@
+@import url(https://fonts.googleapis.com/css?family=Lora);
+body {
+    margin: 0;
+    background:#e7e7f1;
+    font-family: 'Montserrat', sans-serif;
+}
+
+
+/*** topnav ***/
+.container {
+    background-color: #ffffff;
+    height: 63px; 
+    border-bottom-width: 1px; 
+    border-bottom-style: solid;
+    border-bottom-color: #97a2a8;
+    /*box-shadow: 0 1px 20px rgb(74, 68, 68);*/
+}
+
+.topmenu {
+  text-align: right;
+  padding-right: 67px;
+  list-style: none; 
+  margin: 0;
+}
+
+/* links topnav */
+
+
+.avatar {
+    margin-top: 7px;
+    float: right;
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 13px;
+    box-shadow: 0 1px 3px rgb(56, 54, 54);
+    /*border: solid 1px #5957c2;*/
+    
+}
+
+.topmenu>li>a {
+  padding-bottom: 20px;
+  padding-right: 5px;
+  font-weight: bold;
+  float: right;
+  display: block;
+  color: #34336b;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+
+.topmenu i{
+  margin-bottom: 20px;
+  margin-left: -5px;
+  font-weight: bold;
+  float: right;
+  display: block;
+  color: #34336b;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topmenu > li {
+  display: inline-block;
+  position: relative;
+}
+
+
+.fa {
+  font-family: "FontAwesome";
+  color: inherit;
+  padding-left: 10px;
+}
+
+
+.submenu {
+  list-style-type:none;
+  margin-top: -7px;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 150px;
+  height: 200px;
+  z-index: 10;
+
+  -webkit-transition: 0.5s ease-in-out;
+  -moz-transition: 0.5s ease-in-out;
+  -o-transition: 0.5s ease-in-out;
+  transition: 0.5s ease-in-out;
+
+  visibility: hidden;
+  opacity: 0;
+  background: #5957c2;
+
+  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  box-shadow: 0 1px 6px rgb(74, 68, 68);
+}
+
+
+
+
+.submenu a {
+    padding-left: 10px ;
+    display:flex; 
+    font-size: 19px;
+    margin-top: 10px;
+    text-decoration: none;
+    font-family: 'Lora', serif;
+    transition: .5s linear;
+    color:#ffffff;
+
+  }
+
+
+
+.topmenu li:hover .submenu {
+    visibility: visible;
+    opacity: 1;}
+
+.submenu a:hover, .submenu a:focus {
+      background: #7876cc;
+  }
+  
+
+
+
+
+
+
+/*** The sidebar menu ***/
+.sidenav {
+    height: 100%; 
+    width: 250px; /*ширина sidebar */
+    position: absolute; 
+    z-index: 1; /* порядок наложенния */
+    top: 0; /* отступ сверху */
+    left: 0;
+    background-color: #5957c2;
+    overflow-x: hidden;
+    padding-top: 20px;
+    /*border-bottom-right-radius: 30px;
+    border: solid 2px #6558a0;*/
+    box-shadow: 0 1px 6px rgb(74, 68, 68);
+    
+
+
+}
+
+/* The navigation menu links */
+.sidenav a {
+    
+    padding: 9px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 23px;
+    color: #ffffff ;
+    display: block;
+    transition: 0.3s;
+    
+}
+
+.active{
+    background: #7876cc;
+}
+
+
+.icon{
+    font-size: 5px;
+}
+
+.logo {
+    margin: 6px 8px 50px 16px;
+    text-decoration: none;
+    font-size: 23px;
+    color: #ffffff ;
+    display: block;
+    transition: 0.3s;
+    
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover, .sidenav a:focus {
+    background: #7876cc;
+    
+}
+
+
+
+
+/*** content ***/
+.content {
+    background-color: #ffffff;
+    height: 565px; 
+    width: 1125px;
+    margin: 45px 50px 50px 280px;
+    border-radius: 20px;
+    
+
+  
+
+}
+
+
+
+

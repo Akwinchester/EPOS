@@ -1,17 +1,37 @@
 {% extends 'app_reminders/index.html' %}
+{% load static %}
 
 {% block contetnt %}
-            {% for task in tasks %}
-                <div class="task_container">
-                    {% if task.status == False %}
-                        <p class="task">{{ task.task_text }} - {{ task.deadline }}</p>
-                    {% else %}
-                        <p style="text-decoration: line-through" class="task">{{ task.task_text }} - {{ task.deadline }}</p>
-                    {% endif %}
-                    <div class="task_status"></div>
-                </div>
-        {% endfor %}
 
+    <div class="container container1">
+
+		<div class="display-4 mb-2">ToDo приложение</div>
+		<div class="h4 mb-5">список задач</div>
+
+		<!-- List of tasks -->
+		<div class="card mb-4">
+			<ul id="tasksList" class="list-group list-group-flush">
+                <!-- сюда все вставляется-->
+			</ul>
+		</div>
+
+		<div class="card bg-light" >
+			<div class="card-header">Добавить новую задачу</div>
+			<div class="card-body">
+				<form id="form">
+					<div class="form-group">
+						<input type="text" class="form-control" id="taskInput" placeholder="Текст задачи" required>
+						<small id="emailHelp" class="form-text text-muted">Что делаем, сколько времени тратим, какой результат получаем.</small>
+						<input type="date" class="form-control" id="taskInputDate">
+						<small id="emailHelp" class="form-text text-muted">К какому сроку.</small>
+					</div>
+					<button type="submit" class="btn btn-primary  btn-lg active">Добавить</button>
+				</form>
+			</div>
+		</div>
+
+
+	</div>
     <script>
     const requestURL = 'http://127.0.0.1:8000/app_reminders/post/'
     function sendRequest(method, url, body = null)
@@ -40,7 +60,10 @@
         "age":"19"
     }
 
-    sendRequest('POST', requestURL, body).then(data => console.log(data))
-</script>
+    {#sendRequest('POST', requestURL, body).then(data => console.log(data))#}
 
+let as = '{{ task_for_js }}'
+as = as.replaceAll('&quot;', '"')
+</script>
+<script type="text/javascript" src={% static "app_reminders/js/main.js" %}></script>
 {% endblock %}

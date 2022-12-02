@@ -9,6 +9,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 
 
+
+
 import json
 
 
@@ -22,15 +24,31 @@ class HomePage(ListView):
         qs = super().get_queryset()
         return qs.filter(user=self.request.user)
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tasks_object = tasks.objects.all()
+        list_data = []
+        for  i in range(0,len(tasks_object)):
+            list_data.append({"id":tasks_object[i].id_time, "text": tasks_object[i].task_text, "done":tasks_object[i].status})
+
+        tasks_object = str(list_data)
+        tasks_object = tasks_object.replace('False', 'false')
+        tasks_object = tasks_object.replace('True', 'true')
+        tasks_object = tasks_object.replace("'",'"')
+        context['task_for_js'] = tasks_object
+        return context
+
 
 def Post(request):
-    print(request.method, '----------------')
     if request.method == "POST":
-        x = json.loads(request.body.decode())
-        print(x['name'])
+        dict_from_js = json.loads(request.body.decode())
+        new_task = tasks(task_text=dict_from_js['text'], status=dict_from_js['done'], id_time=dict_from_js['id'])
+        new_task.save()
+
+
 
     # return render(request, 'app_reminders/home_page.html')
-    return HttpResponse('привет')
+    # return Response('привет')
 
 
 class ProfilePage(DetailView):

@@ -1,0 +1,68 @@
+{% load static %}
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <link type="text/css" href="{% static 'app_reminders/css/iconsfont.css' %}" rel="stylesheet" />
+    <link type="text/css" href="{% static 'app_reminders/css/style.css' %}" rel="stylesheet" />
+    <link type="text/css" href="{% static 'app_reminders/css/style_for_content.css' %}" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Commissioner&family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href={% static 'app_reminders/css/google_css.css' %}/>
+{#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>#}
+	<link rel="stylesheet" href={% static 'app_reminders/css/main.css' %}/>
+    <title>-----</title>
+
+<body>
+    <!-- topnav  -->
+    <header >
+        <div class="container">
+        <ul class="topmenu">
+            {% if request.user.is_authenticated %}
+                <li><a>профиль {{ request.user }}</a></li>
+            {% endif %}
+            <li><img src={% static 'app_reminders/images/Без укрощение.jfif' %} alt="Avatar" class="avatar"></li>
+            <li><i class="fa fa-angle-down"></i>
+                
+                <div class="submenu">
+                    <a href="">Item 1</a>
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url 'Logout_user' %}">Выход</a>
+                    {% endif %}
+
+                </div>
+            </li>
+        </ul>
+
+        </div>
+    </header>
+
+
+    <!-- content -->
+    <div class="welcomblock" id="content">
+
+    </div>
+
+{#    <div class="content" id="content">#}
+{#        {% block contetnt %}#}
+{#        {% endblock %}#}
+{#    </div>#}
+            {% block contetnt %}
+        {% endblock %}
+
+    <!-- Side navigation -->
+    <nav>
+    <div class="sidenav">
+        <h1 class="logo">LOGO</h1>
+        <a class="active" href="#"><i class="fa-solid fa-house fa-fw"></i> Главная</a> 
+        <a href="tasks.html"><i class="fa-regular fa-square-check fa-fw"></i>  Задачи</a>
+        <a href="calendar.html"><i class="fa-regular fa-calendar fa-fw"></i>  Календарь</a>
+        <a href="profile.html"><i class="fa-solid fa-user fa-fw"></i>  Профиль</a>
+    </div>
+    </nav>
+    
+
+</body>
+
+</html>
