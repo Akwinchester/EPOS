@@ -7,7 +7,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
-
+from django.contrib.auth.models import User
+from datetime import datetime
 
 
 
@@ -26,11 +27,18 @@ class HomePage(ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
+        # user = User.objects.create_user('user_from_code_1', password='123ewqasdCXZ')
+
         tasks_object = tasks.objects.all()
         list_data = []
         for  i in range(0,len(tasks_object)):
-            list_data.append({"id":tasks_object[i].id_time, "text": tasks_object[i].task_text, "done":tasks_object[i].status})
+            print(datetime.now(), tasks_object[i].deadline)
+            # if (tasks_object[i].deadline > datetime.now() ):
+            #     print(tasks_object[i].deadline, ' - ', 'True')
+            # else:
+            #     print(tasks_object[i].deadline, ' - ', 'False')
 
+            list_data.append({"id":tasks_object[i].id_time, "text": tasks_object[i].task_text, "done":tasks_object[i].status, "date":f"{tasks_object[i].deadline.year}-{tasks_object[i].deadline.month}-{tasks_object[i].deadline.day}"})
         tasks_object = str(list_data)
         tasks_object = tasks_object.replace('False', 'false')
         tasks_object = tasks_object.replace('True', 'true')
@@ -42,13 +50,33 @@ class HomePage(ListView):
 def Post(request):
     if request.method == "POST":
         dict_from_js = json.loads(request.body.decode())
-        new_task = tasks(task_text=dict_from_js['text'], status=dict_from_js['done'], id_time=dict_from_js['id'])
+        if dict_from_js['date']=="":
+            new_task = tasks(task_text=dict_from_js['text'], status=dict_from_js['done'], id_time=dict_from_js['id'])
+        else:
+            new_task = tasks(task_text=dict_from_js['text'], status=dict_from_js['done'], id_time=dict_from_js['id'], deadline=dict_from_js['date'])
+
         new_task.save()
 
+    return HttpResponse('ответ от Post')
 
 
-    # return render(request, 'app_reminders/home_page.html')
-    # return Response('привет')
+def Post_status(request):
+    if request.method == "POST":
+        dict_from_js = json.loads(request.body.decode())
+        task = tasks.objects.get(id_time=dict_from_js['id'])
+        task.status = dict_from_js['status']
+        task.save()
+    return HttpResponse('ответ от Post_status')
+
+
+def Post_delete(request):
+    if request.method =="POST":
+        task_id = request.body.decode()
+        print(task_id)
+        tasks.objects.get(id_time=task_id).delete()
+
+    return HttpResponse('ответ от Post_delete')
+
 
 
 class ProfilePage(DetailView):

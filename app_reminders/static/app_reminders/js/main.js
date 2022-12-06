@@ -26,15 +26,17 @@ tasksList.addEventListener('click', doneTask);
 function addTask(event) {
 	// Отменяем отправку формы
 	event.preventDefault();
-
 	// Достаем текст задачи из поля ввода
 	const taskText = taskInput.value;
+	//Добавляем дату задачи из поля ввода
+	const taskDate =  taskInputDate.value;
 
 	// Описываем задачу в виде объекта
 	const newTask = {
 		id: Date.now(),
 		text: taskText,
 		done: false,
+		date: taskDate,
 	};
 	sendRequest('POST', requestURL, newTask)
 
@@ -63,6 +65,10 @@ function deleteTask(event) {
 	// Определяем ID задачи
 	const id = Number(parenNode.id);
 
+	const requestURLdelete = 'http://127.0.0.1:8000/app_reminders/delete/';
+
+	// const tasksid = {id:id};
+	sendRequest('POST', requestURLdelete, id);
 	// Удаляем задча через фильтрацию массива
 	tasks = tasks.filter((task) => task.id !== id);
 
@@ -84,7 +90,14 @@ function doneTask(event) {
 	// Определяем ID задачи
 	const id = Number(parentNode.id);
 	const task = tasks.find((task) => task.id === id);
+	const requestURLstatus = 'http://127.0.0.1:8000/app_reminders/status/';
+
 	task.done = !task.done;
+	const taskstatus = {
+		id: task.id,
+		status: task.done,
+		}
+	sendRequest('POST', requestURLstatus, taskstatus)
 
 	// Сохраняем список задач в хранилище браузера localStorage
 	saveToLocalStorage();
@@ -119,17 +132,18 @@ function renderTask(task) {
 
 	// Формируем разметку для новой задачи
 	const taskHTML = `
-                <li id="${task.id}" class="list-group-item d-flex justify-content-between task-item">
-					<span class="${cssClass} linebreak">${task.text}</span>
-					<div class="task-item__buttons">
-						<button type="button" data-action="done" class="btn-action">
-							<img src="/static/app_reminders/images/tick.svg" alt="Done" width="18" height="18">
-						</button>
-						<button type="button" data-action="delete" class="btn-action">
-						<img src="/static/app_reminders/images/cross.svg" alt="Done" width="18" height="18">
-						</button>
-					</div>
-				</li>`;
+					<li id="${task.id}" class="list-group-item d-flex  justify-content-between task-item">
+						<span class="${cssClass} linebreak">${task.text}  ${task.date}</span>
+						<div class="task-item__buttons">
+							<button type="button" data-action="done" class="btn-action">
+								<img src="/static/app_reminders/images/tick.svg" alt="Done" width="18" height="18">
+							</button>
+							<button type="button" data-action="delete" class="btn-action">
+							<img src="/static/app_reminders/images/cross.svg" alt="Done" width="18" height="18">
+							</button>
+						</div>
+					</li>
+					`;
 
 	// Добавляем задачу на страницу
 	tasksList.insertAdjacentHTML('beforeend', taskHTML);

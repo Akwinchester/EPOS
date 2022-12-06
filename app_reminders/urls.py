@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import HomePage, AddUser, LoginUser, logout_user, ProfilePage, CreateProfilePage, Post
+from .views import HomePage, AddUser, LoginUser, logout_user, ProfilePage, CreateProfilePage, Post, Post_status, Post_delete
 
 urlpatterns = [
     path('home_page/', HomePage.as_view(), name='Home_page'),
@@ -9,4 +9,6 @@ urlpatterns = [
     path('profile/<int:pk>/', ProfilePage.as_view(), name='Profile_user'),
     path('create_profile/',CreateProfilePage.as_view(), name='Create_profile_user'),
     path('post/', Post, name='Post'),
+    path('status/', Post_status, name='Post_status'),
+    path('delete/', Post_delete, name='Post_delete')
 ]

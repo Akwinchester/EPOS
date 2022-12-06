@@ -7,13 +7,21 @@ import logging
 # import telegramcalendar
 from telegram_bot_calendar import DetailedTelegramCalendar, LSTEP
 import datetime
+from ...models import tasks
+
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.models import User
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-# определяем константы этапов разговора
+# определяем константы этапов разговора для добавления задачи
 TASK, DESCRIPTION, DEADLINE = range(3)
+
+# определяем константы этапов разговора для авторизации
+LOGIN, PASSWORD= range(2)
 
 # словарь с данными для добавления задач
 task_data = {}
+input_data = {}
 # словарь этапов выбора даты
 list_step = {}
 list_step['y'] = "год"
@@ -37,13 +45,25 @@ class Command(BaseCommand):
             },
             fallbacks=[CommandHandler('cancel', cancel)],
         )
+
+        input_handler = ConversationHandler(
+
+            entry_points=[CommandHandler('input', start_input)],
+            states={
+                LOGIN: [MessageHandler(Filters.text & ~Filters.command, input_password)],
+                PASSWORD: [MessageHandler(Filters.text & ~Filters.command, finish_input)],
+            },
+            fallbacks=[CommandHandler('cancel', cancel)],
+        )
         unknown_handler = MessageHandler(Filters.command, unknown)
         button_handler = CallbackQueryHandler(button)
 
         updater.dispatcher.add_handler(start_handler)
         updater.dispatcher.add_handler(information_handler)
         updater.dispatcher.add_handler(add_task_handler)
+        updater.dispatcher.add_handler(input_handler)
         updater.dispatcher.add_handler(button_handler)
+        updater.dispatcher.add_handler(input_handler)
         updater.dispatcher.add_handler(unknown_handler)
 
         updater.start_polling(timeout=120)
@@ -53,13 +73,64 @@ class Command(BaseCommand):
 def start(update, context):
     start_keyboard = [['/add_task',
                        '/information',
-                       '/help']]
+                       '/help',
+                       '/input',]]
     start_markup = ReplyKeyboardMarkup(start_keyboard, one_time_keyboard=True)
     context.bot.send_message(update.message.chat_id, 'Шалом')
-    context.bot.send_message(update.message.chat_id, 'Чтобы добавить задачу нажми /add_task. Также ты можешь посмотреть возомжности нашего бота - команда /information. Или задать вопрос в нашу техподдержку /help', reply_markup=start_markup)
+    context.bot.send_message(update.message.chat_id, 'Чтобы войти в систему нажми /input. Если ты уже авторизован и хочешь добавить задачу, нажми /add_task. Также ты можешь посмотреть возомжности нашего бота - команда /information. Или задать вопрос в нашу техподдержку /help', reply_markup=start_markup)
+
+
+#начало диалога по входу в бота
+def start_input(update, context):
+    context.bot.send_message(update.message.chat_id, "Отправь сообщением имя пользователя")
+    return LOGIN
+
+
+def input_password(update, context):
+    chat_id = update.message.chat_id
+    user_name = update.message.text
+    if not (chat_id in input_data):
+        input_data[str(chat_id)] = {}
+        input_data[str(chat_id)]['login'] = user_name
+
+    if User.objects.filter(username=user_name).exists():
+        update.message.reply_text(f'Отлично, пользователь {user_name} найден. Теперь введи пароль. После авторизации, я удалю твое сообщение с паролем. Паранойя, конечно, но так безопаснее')
+        return PASSWORD
+    else:
+        update.message.reply_text(f'Жаль, пользователь {user_name} не найден. Введи комнду /input и начни сначала')
+        return ConversationHandler.END
+
+
+def finish_input(update, context):
+    chat_id = update.message.chat_id
+    password = update.message.text
+    context.bot.delete_message(chat_id, update.message.message_id)
+    input_data[str(chat_id)]['password'] = password
+    user = authenticate(username=input_data[str(chat_id)]['login'], password=password)
+    tasks_user = tasks.objects.all().filter(user=user.id)
+    update.message.reply_text('''Поздравляю, ты вошел в систему!!!
+Вот твои задачи:''')
+    for task in tasks_user:
+        context.bot.send_message(update.message.chat_id, str(task.task_text) + ' ' + str(task.deadline))
+    return ConversationHandler.END
+
+
+    # list_data = update.message.text.split('-')
+    # user= authenticate(username=list_data[0], password=list_data[1])
+    # if User.objects.filter(username=list_data[0]).exists():
+    #     context.bot.send_message(update.message.chat_id, f'пользователь {list_data[0]} найден')
+    # else:
+    #     context.bot.send_message(update.message.chat_id, f'пользователь {list_data[0]} не найден')
+    # tasks_user = tasks.objects.all().filter(user=user.id)
+    # print(tasks_user)
+    # for task in tasks_user:
+    #     context.bot.send_message(update.message.chat_id, str(task.task_text) + ' ' + str(task.deadline))
+    #     print(task.task_text)
+#конец диалога по входу в бота
 
 
 
+#Начало диалога по добавлению задачи
 def start_add_task(update, _):
     update.message.reply_text('Отправь свою задачу следующим сообщением')
     return TASK
@@ -101,8 +172,9 @@ def add_deadline(update, _):
     print(task_data)
 
     return ConversationHandler.END
+#конец диалога по добавлению задачи
 
-
+#обработчик выхода из любого диалога
 def cancel(update, _):
     # определяем пользователя
     user = update.message.from_user
