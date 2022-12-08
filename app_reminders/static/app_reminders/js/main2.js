@@ -9,12 +9,9 @@ const option = {
 	month: 'short',
 	day: 'numeric',
 }
+
 let tasks = [];
 
-// if (localStorage.getItem('tasks')) {
-// 	tasks = JSON.parse(localStorage.getItem('tasks'));
-// 	tasks.forEach((task) => renderTask(task));
-// }
 if (as) {
 	tasks = JSON.parse(as);
 	tasks.forEach((task) => renderTask(task));
@@ -30,18 +27,17 @@ tasksList.addEventListener('click', doneTask);
 function addTask(event) {
 	// Отменяем отправку формы
 	event.preventDefault();
+
 	// Достаем текст задачи из поля ввода
 	const taskText = taskInput.value;
-	//Добавляем дату задачи из поля ввода
-	const taskDate =  taskInputDate.value;
 
 	// Описываем задачу в виде объекта
 	const newTask = {
 		id: Date.now(),
 		text: taskText,
 		done: false,
-		date: taskDate,
-		status: true,
+		date: taskInputDate.value,
+		status_date: 'true',
 	};
 	sendRequest('POST', requestURL, newTask)
 
@@ -69,7 +65,6 @@ function deleteTask(event) {
 
 	// Определяем ID задачи
 	const id = Number(parenNode.id);
-
 	const requestURLdelete = 'http://127.0.0.1:8000/app_reminders/delete/';
 
 	// const tasksid = {id:id};
@@ -114,10 +109,9 @@ function doneTask(event) {
 function checkEmptyList() {
 	if (tasks.length === 0) {
 		const emptyListHTML = `<li id="emptyList" class="list-group-item empty-list">
-					<img src="/static/app_reminders/images/leaf.svg" alt=" Empty" width="48" class="mt-3">
+					<img src="/static/app_reminders/images/leaf.svg" alt="Empty" width="48" class="mt-3">
 					<div class="empty-list__title">Список дел пуст</div>
 				</li>`;
-		console.log(emptyListHTML)
 		tasksList.insertAdjacentHTML('afterbegin', emptyListHTML);
 	}
 
@@ -134,11 +128,19 @@ function saveToLocalStorage() {
 function renderTask(task) {
 	// Формируем CSS класс
 	const cssClass = task.done ? 'task-title task-title--done' : 'task-title';
-	const cssColorClass = 1>2 ? 'status-true': 'status-false'
-	//  обработка даты
+	const cssColorClass = (task.status_date === 'true') ? 'status-true': 'status-false'
+
+
+	
+	//Обрабатываем дату в новый формат
 	let taskDate = new Date(task.date);
+	if (!task.date){
+		taskDate = '';
+	}
 	taskDate = taskDate.toLocaleString('ru-RU', option);
 
+
+	
 	// Формируем разметку для новой задачи
 	const taskHTML = `
                 <li id="${task.id}" class="list-group-item d-flex justify-content-between task-item">

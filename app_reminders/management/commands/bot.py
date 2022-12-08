@@ -76,7 +76,7 @@ def start(update, context):
                        '/help',
                        '/input',]]
     start_markup = ReplyKeyboardMarkup(start_keyboard, one_time_keyboard=True)
-    context.bot.send_message(update.message.chat_id, 'Шалом')
+    context.bot.send_message(update.message.chat_id, 'Привет')
     context.bot.send_message(update.message.chat_id, 'Чтобы войти в систему нажми /input. Если ты уже авторизован и хочешь добавить задачу, нажми /add_task. Также ты можешь посмотреть возомжности нашего бота - команда /information. Или задать вопрос в нашу техподдержку /help', reply_markup=start_markup)
 
 

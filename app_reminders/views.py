@@ -8,7 +8,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 
@@ -32,13 +32,8 @@ class HomePage(ListView):
         tasks_object = tasks.objects.all()
         list_data = []
         for  i in range(0,len(tasks_object)):
-            print(datetime.now(), tasks_object[i].deadline)
-            # if (tasks_object[i].deadline > datetime.now() ):
-            #     print(tasks_object[i].deadline, ' - ', 'True')
-            # else:
-            #     print(tasks_object[i].deadline, ' - ', 'False')
+            list_data.append({"id":tasks_object[i].id_time, "text": tasks_object[i].task_text, "done":tasks_object[i].status, "date":f"{tasks_object[i].deadline.year}-{tasks_object[i].deadline.month}-{tasks_object[i].deadline.day + 1}"})
 
-            list_data.append({"id":tasks_object[i].id_time, "text": tasks_object[i].task_text, "done":tasks_object[i].status, "date":f"{tasks_object[i].deadline.year}-{tasks_object[i].deadline.month}-{tasks_object[i].deadline.day}"})
         tasks_object = str(list_data)
         tasks_object = tasks_object.replace('False', 'false')
         tasks_object = tasks_object.replace('True', 'true')
