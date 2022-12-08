@@ -128,7 +128,13 @@ function saveToLocalStorage() {
 function renderTask(task) {
 	// Формируем CSS класс
 	const cssClass = task.done ? 'task-title task-title--done' : 'task-title';
-	const cssColorClass = (task.status_date === 'true') ? 'status-true': 'status-false'
+
+	let d = new Date();
+	let dd = new Date(task.date);
+	d.setHours(0,0,0,0);
+	dd.setHours(0,0,0,0);
+
+	const cssColorClass = (d <= dd) ? 'status-true': 'status-false';
 
 
 	
