@@ -23,16 +23,20 @@ class HomePage(ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.filter(user=self.request.user)
+        print(qs)
+        print(qs.filter(user=self.request.user))
+        qs = qs.filter(id=214)
+        return qs
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
         # user = User.objects.create_user('user_from_code_1', password='123ewqasdCXZ')
 
-        tasks_object = tasks.objects.all()
+        tasks_object = tasks.objects.filter(user=self.request.user)
         list_data = []
         for  i in range(0,len(tasks_object)):
-            list_data.append({"id":tasks_object[i].id_time, "text": tasks_object[i].task_text, "done":tasks_object[i].status, "date":f"{tasks_object[i].deadline.year}-{tasks_object[i].deadline.month}-{tasks_object[i].deadline.day + 1}"})
+            print(tasks_object[i].deadline)
+            list_data.append({"id":tasks_object[i].id_time, "text": tasks_object[i].task_text, "done":tasks_object[i].status, "date":f"{tasks_object[i].deadline.year}-{tasks_object[i].deadline.month}-{tasks_object[i].deadline.day+1}"})
 
         tasks_object = str(list_data)
         tasks_object = tasks_object.replace('False', 'false')
@@ -46,9 +50,9 @@ def Post(request):
     if request.method == "POST":
         dict_from_js = json.loads(request.body.decode())
         if dict_from_js['date']=="":
-            new_task = tasks(task_text=dict_from_js['text'], status=dict_from_js['done'], id_time=dict_from_js['id'])
+            new_task = tasks(task_text=dict_from_js['text'], status=dict_from_js['done'], id_time=dict_from_js['id'], user=request.user)
         else:
-            new_task = tasks(task_text=dict_from_js['text'], status=dict_from_js['done'], id_time=dict_from_js['id'], deadline=dict_from_js['date'])
+            new_task = tasks(task_text=dict_from_js['text'], status=dict_from_js['done'], id_time=dict_from_js['id'], deadline=dict_from_js['date'], user=request.user)
 
         new_task.save()
 
